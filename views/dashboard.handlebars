@@ -1,3 +1,5 @@
+<link rel="stylesheet" href="/stylesheets/flatpickr.css" />
+<script src="/javascripts/flatpickr.js"></script>
 <script src="/javascripts/tinymce.min.js"></script>
 <script>
     tinymce.init({
@@ -8,7 +10,7 @@
     });
 </script>
 <nav class="w3-sidenav w3-purple w3-card-8" id="sideNav" style="width: 15%">
-    <a href="#" class="w3-center w3-xlarge">Open Editor</a>
+    <a href="javascript:void(0)" class="w3-center w3-xlarge" onclick="displayOnClick()">Open Editor</a>
     <a href="#">Monday</a>
     <a href="#">Tuesday</a>
     <a href="#">Wednesday</a>
@@ -18,8 +20,41 @@
 
 <div style="margin-left: 15%">
     <div class="w3-container">
-        <div id="textEditorHolder" class="w3-card-8 w3-margin-top">
+        <div id="textEditorHolder" class="w3-card-8 w3-margin-top" style="display: none">
+            <div class="w3-panel">
+                <div class="w3-half">
+                    <label class="w3-label w3-xlarge w3-center">Title: </label>
+                    <input type="text" class="w3-input w3-large w3-center" placeholder="Title" required name="title">
+                </div>
+                <div class="w3-half">
+                    <label class="w3-label w3-xlarge w3-center">Date: </label>
+                    <input type="text" class="flatpickr w3-input w3-large w3-center" placeholder="Date" required name="date">
+                </div>
+            </div>
             <textarea id="editor"></textarea>
         </div>
     </div>
+    <div id="contentArea">
+        <div class="w3-card-8 w3-xlarge w3-center w3-margin-top w3-padding-24" id="noElements">
+            No Items To Display Now.
+            <br> <br>
+            <button class="w3-btn w3-red w3-hover-green w3-round-large w3-xlarge w3-border w3-ripple" onclick="displayOnClick()">
+                    Click Here to Create a New Page
+            </button>
+        </div>
+    </div>
 </div>
+<script>
+    var editor = document.getElementById('textEditorHolder');
+    var noDisplay = document.getElementById('noElements');
+    function displayOnClick(){
+        noDisplay.style.display = "none";
+        editor.style.display = "block";
+    }
+
+    var dateInput = document.getElementsByName('date')[0];
+    var date = new Date();
+    dateInput.value = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate();
+
+    flatpickr('.flatpickr');
+</script>
