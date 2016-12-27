@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Personal Diary</title>
+    <link href="https://fonts.googleapis.com/css?family=Dancing+Script|Lobster" rel="stylesheet" />
+    <link rel="stylesheet" href="/stylesheets/W3.css" />
+    <link rel="stylesheet" href="/stylesheets/style.css" />
+    <style>
+        #header{
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.3em;
+        }
+        body, div, h1, h2{
+            font-family: 'Lobster','Times New Roman', Times, serif, monospace !important;
+            cursor: default !important;
+        }
+        #navBar{
+            font-family: 'Lobster','Times New Roman', Times, serif, monospace !important;
+            font-size: 1.3em !important;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <ul class="w3-navbar w3-topnav w3-purple w3-large" id="navBar">
+            <li class="w3-padding-8 w3-container w3-navitem" id="header">Personal Diary</li>
+            {{#if user}}
+            <li class="w3-right"><a href="/auth/logout">Logout</a></li>
+            <li class="w3-right"><a href="/users/dashboard">Dashboard</a></li>
+            {{else}}
+            <li class="w3-right"><a href="/auth/register">Register</a></li>
+            <li class="w3-right"><a href="/auth/login">Login</a></li>
+            {{/if}}
+        </ul>
+        </div>
+    </nav>
+
+    <div>
+        {{#if successMsg}}
+        <div class="w3-panel w3-green w3-padding-8 w3-xlarge">{{successMsg}}</div>
+        {{/if}} {{#if errorMsg}}
+        <div class="w3-panel w3-red w3-padding-8 w3-xlarge">{{errorMsg}}</div>
+        {{/if}} {{#if error}}
+        <div class="w3-panel w3-red w3-padding-8 w3-xlarge">{{error}}</div>
+        {{/if}} {{#if success}}
+        <div class="w3-panel w3-green w3-padding-8 w3-xlarge">{{success}}</div>
+        {{/if}} {{{body}}}
+    </div>
+</body>
+
+</html>

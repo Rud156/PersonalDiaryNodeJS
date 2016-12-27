@@ -1,0 +1,42 @@
+<h2 class="w3-center w3-xlarge w3-container w3-blue w3-padding-16">Account Registeration:</h2>
+<form method="post" action="/auth/register" class="w3-container" id="regForm">
+    <label class="w3-label w3-xlarge">Username: </label>
+    <input type="text" class="w3-input w3-large" name="username" placeholder="Username" required autocomplete="off">
+
+    <label class="w3-label w3-xlarge">Password: </label>
+    <input type="password" class="w3-input w3-large" name="password" placeholder="Password" required onkeyup="passwordType()">
+
+    <label class="w3-label w3-xlarge">Re-Enter Password: </label>
+    <input type="password" class="w3-input w3-large" id="secondPass" placeholder="Re-Enter Password" required onkeyup="passwordType()">
+    <div class="w3-panel w3-red w3-center w3-padding-8 w3-round-large" id="warningPanel">
+        <h3></h3>
+    </div>
+    <button class="w3-btn w3-margin-top w3-hover-green w3-round-large w3-xlarge" onclick="submitForm()" id="submitButton">Submit</button>
+</form>
+
+<script>
+    var secondPass = document.getElementById('secondPass');
+    var firstPass = document.getElementsByName('password')[0];
+    var form = document.getElementById('regForm');
+    var button = document.getElementById('submitButton');
+    var panel = document.getElementById('warningPanel');
+    button.disabled = true;
+
+    function submitForm() {
+        if (firstPass.value !== "" && secondPass.value !== "" && firstPass.value === secondPass.value)
+            form.submit();
+    }
+
+    function passwordType(){
+        if(firstPass.value !== secondPass.value && secondPass.value !== "" && firstPass.value !== ""){
+            panel.className = "w3-panel w3-red w3-center w3-padding-8 w3-round-large w3-large";
+            panel.innerHTML = "Passwords Do Not Match";
+            button.disabled = true;
+        }
+        else if(firstPass.value === secondPass.value && secondPass.value !== "" && firstPass.value !== ""){
+            panel.className = "w3-panel w3-green w3-center w3-padding-8 w3-round-large w3-large";
+            panel.innerHTML = "Passwords Match";
+            button.disabled = false;
+        }
+    }
+</script>
