@@ -1,5 +1,13 @@
-<nav class="w3-sidenav w3-purple w3-card-8" id="sideNav">
-    <a href="javascript:void(0)" onclick="closeNav()" class="w3-closenav w3-xlarge w3-center">&times;</a>
+<script src="/javascripts/tinymce.min.js"></script>
+<script>
+    tinymce.init({
+        selector: '#editor',
+        theme: 'modern',
+        plugins: ['image textcolor spellchecker insertdatetime'],
+        toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | link image | bullist numlist outdent indent | emoticons'
+    });
+</script>
+<nav class="w3-sidenav w3-purple w3-card-8" id="sideNav" style="width: 15%">
     <a href="#" class="w3-center w3-xlarge">Open Editor</a>
     <a href="#">Monday</a>
     <a href="#">Tuesday</a>
@@ -7,15 +15,11 @@
     <a href="#">Thursday</a>
     <a href="#">Friday</a>
 </nav>
-<header class="w3-container">
-    <span class="w3-opennav w3-xlarge" onclick="openNav()">&#9776;</span>
-</header>
-<script>
-    document.getElementById('sideNav').style.display = "none";
-    function closeNav() {
-        document.getElementById('sideNav').style.display = "none";
-    }
-    function openNav() {
-        document.getElementById('sideNav').style.display = "block";
-    }
-</script>
+
+<div style="margin-left: 15%">
+    <div class="w3-container">
+        <div id="textEditorHolder" class="w3-card-8 w3-margin-top">
+            <textarea id="editor"></textarea>
+        </div>
+    </div>
+</div>
