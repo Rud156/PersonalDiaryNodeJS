@@ -1,3 +1,21 @@
-<div class="w3-margin w3-xlarge">
-    Welcome to your dashboard {{capitalizeAll user.username}}
-</div>
+<nav class="w3-sidenav w3-purple w3-card-8" id="sideNav">
+    <a href="javascript:void(0)" onclick="closeNav()" class="w3-closenav w3-xlarge w3-center">&times;</a>
+    <a href="#" class="w3-center w3-xlarge">Open Editor</a>
+    <a href="#">Monday</a>
+    <a href="#">Tuesday</a>
+    <a href="#">Wednesday</a>
+    <a href="#">Thursday</a>
+    <a href="#">Friday</a>
+</nav>
+<header class="w3-container">
+    <span class="w3-opennav w3-xlarge" onclick="openNav()">&#9776;</span>
+</header>
+<script>
+    document.getElementById('sideNav').style.display = "none";
+    function closeNav() {
+        document.getElementById('sideNav').style.display = "none";
+    }
+    function openNav() {
+        document.getElementById('sideNav').style.display = "block";
+    }
+</script>
