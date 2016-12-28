@@ -11,10 +11,16 @@ var userSchema = mongoose.Schema({
         type: String
     },
     documents: [{
-        date: String,
         title: String,
-        content: String
+        date: String
     }]
+});
+
+var documentSchema = mongoose.Schema({
+    date: String,
+    title: String,
+    hash: String,
+    content: String
 });
 
 var User = module.exports = mongoose.model('User', userSchema);

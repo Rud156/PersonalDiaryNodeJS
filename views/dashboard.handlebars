@@ -14,16 +14,14 @@
 <script src="/javascripts/tinymce.min.js"></script>
 <nav class="w3-sidenav w3-purple w3-card-8" id="sideNav" style="width: 15%">
     <a href="javascript:void(0)" class="w3-center w3-xlarge" onclick="displayOnClick()">Open Editor</a>
-    <a href="#">Monday</a>
-    <a href="#">Tuesday</a>
-    <a href="#">Wednesday</a>
-    <a href="#">Thursday</a>
-    <a href="#">Friday</a>
+    {{#each user.documents}}
+    <a href="javascript:void(0)">{{title}}</a>
+    {{/each}}
 </nav>
 
 <div style="margin-left: 15%" id="rightPane">
     <div class="w3-container">
-        <div id="textEditorHolder" class="w3-card-8 w3-margin-top w3-center" style="display: none">
+        <form id="textEditorHolder" class="w3-card-8 w3-margin-top w3-center" style="display: none" method="POST" action="/users/save">
             <div class="w3-panel" style="text-align: left">
                 <div class="w3-half">
                     <label class="w3-label w3-xlarge w3-center w3-text-cyan">Title: </label>
@@ -33,13 +31,13 @@
                     <label class="w3-label w3-xlarge w3-center w3-text-cyan">Date: </label>
                     <input type="text" class="flatpickr w3-input w3-large w3-center w3-text-amber transparent" placeholder="Date" required name="date">
                 </div>
-                <input type="text" class="w3-hide" id="userText" />
+                <input type="text" class="w3-hide" id="userText" name="userText"/>
             </div>
             <textarea id="editor"></textarea>
             <button class="w3-btn w3-margin-top w3-margin-bottom w3-border w3-border-red w3-round-large w3-text-amber transparent" onclick="saveText()">
                 Submit Page
             </button>
-        </div>
+        </form>
     </div>
     <div id="contentArea">
         <div class="w3-card-8 w3-xlarge w3-center w3-margin-top w3-padding-24" id="noElements">
