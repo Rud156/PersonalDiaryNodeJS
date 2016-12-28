@@ -20,16 +20,18 @@ router.post('/register', function (req, res) {
     var password = req.body.password;
     userName = userName.toLowerCase();
 
-    var newUser = new User({
-        username: userName,
-        password: password
-    });
     User.findOne({ username: userName }, function (err, userObj) {
         if (userObj) {
             req.flash('errorMsg', 'User is already registered');
             res.redirect('/auth/register');
         }
         else {
+            var newUser = new User({
+                username: userName,
+                password: password,
+                documents: []
+            });
+
             User.createUser(newUser, function (err, user) {
                 if (err)
                     throw err;

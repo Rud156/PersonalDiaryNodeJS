@@ -15,6 +15,7 @@ var helpers = require('handlebars-helpers');
 var mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/personalDiary');
 var dataBase = mongoose.connection;
+mongoose.Promise = global.Promise;
 
 var index = require('./routes/index');
 var users = require('./routes/users');

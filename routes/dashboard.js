@@ -3,7 +3,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/dashboard', ensureAuthenticated, function (req, res, next) {
-    res.render('dashboard', { title: 'Express' });
+    res.render('dashboard');
 });
 
 function ensureAuthenticated(req, res, next){
