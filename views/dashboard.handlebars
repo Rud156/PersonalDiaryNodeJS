@@ -13,7 +13,7 @@
 <script src="/javascripts/flatpickr.js"></script>
 <script src="/javascripts/tinymce.min.js"></script>
 <nav class="w3-sidenav w3-purple w3-card-8" id="leftPane" style="width: 15%">
-    <a href="javascript:void(0)" class="w3-center w3-xlarge" onclick="displayOnClick()">Open Editor</a>
+    <a href="/users/editor" class="w3-center w3-xlarge" onclick="displayOnClick()">Open Editor</a>
     {{#each user.documents}}
     <a href="/users/{{hash}}">{{title}}</a>
     {{/each}}
@@ -66,10 +66,6 @@
 <script>
     var editor = document.getElementById('textEditorHolder');
     var noDisplay = document.getElementById('noElements');
-    function displayOnClick(){
-        noDisplay.style.display = "none";
-        editor.style.display = "block";
-    }
 
     var dateInput = document.getElementsByName('date')[0];
     var date = new Date();

@@ -58,6 +58,11 @@ router.post('/save', function (req, res, next) {
     });
 });
 
+router.get('/editor', function(req, res, next){
+    console.log("Activating the editor");
+    res.redirect('/users/dashboard');
+});
+
 router.route('/:id').get(function (req, res) {
     Model.Docs.findOne({hash: req.params.id}, function(err, docObj){
         if(err)
