@@ -15,7 +15,7 @@
 <nav class="w3-sidenav w3-purple w3-card-8" id="sideNav" style="width: 15%">
     <a href="javascript:void(0)" class="w3-center w3-xlarge" onclick="displayOnClick()">Open Editor</a>
     {{#each user.documents}}
-    <a href="javascript:void(0)">{{title}}</a>
+    <a href="/users/{{hash}}">{{title}}</a>
     {{/each}}
 </nav>
 

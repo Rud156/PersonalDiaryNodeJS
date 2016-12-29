@@ -13,18 +13,31 @@ var userSchema = mongoose.Schema({
     },
     documents: [{
         title: String,
-        date: String
+        date: String,
+        hash: String
     }]
 });
 
 var documentSchema = mongoose.Schema({
     date: String,
     title: String,
-    hash: String,
+    hash: {
+        type: String,
+        index: true
+    },
     content: String
 });
 
-var User = module.exports = mongoose.model('User', userSchema);
+var User = mongoose.model('User', userSchema);
+module.exports = {
+    User: User,
+    Docs: mongoose.model('Document', documentSchema)
+};
+
+// Torch
+// CheckBook
+// Aadhar Card
+// Voter Card Xerox
 
 module.exports.createUser = function(newUser, callback){
     bCrypt.genSalt(10, function(err, salt){
@@ -33,10 +46,6 @@ module.exports.createUser = function(newUser, callback){
             newUser.save(callback);
         });
     });
-};
-
-module.exports.getUserbyId = function(Id, callback){
-    User.findById(Id, callback);
 };
 
 module.exports.comparePassword = function(password, hash, callback){

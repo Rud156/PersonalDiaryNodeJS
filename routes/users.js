@@ -4,7 +4,7 @@ var router = express.Router();
 var passport = require('passport');
 var localStrategy = require('passport-local').Strategy;
 
-var User = require('../Models/models');
+var Model = require('../Models/models');
 
 /* GET users listing. */
 router.get('/login', function (req, res, next) {
@@ -20,19 +20,21 @@ router.post('/register', function (req, res) {
     var password = req.body.password;
     userName = userName.toLowerCase();
 
-    User.findOne({ username: userName }, function (err, userObj) {
+    Model.User.findOne({ username: userName }, function (err, userObj) {
+        if(err)
+            throw err;
         if (userObj) {
             req.flash('errorMsg', 'User is already registered');
             res.redirect('/auth/register');
         }
         else {
-            var newUser = new User({
+            var newUser = new Model.User({
                 username: userName,
                 password: password,
                 documents: []
             });
 
-            User.createUser(newUser, function (err, user) {
+            Model.createUser(newUser, function (err, user) {
                 if (err)
                     throw err;
                 console.log(user);
@@ -47,13 +49,13 @@ router.post('/register', function (req, res) {
 passport.use(new localStrategy(
     function (username, password, done) {
         username = username.toLowerCase();
-        User.findOne({ username: username }, function (err, userObj) {
+        Model.User.findOne({ username: username }, function (err, userObj) {
             if (err)
                 throw err;
             if (!userObj)
                 return done(null, false, { message: "Username or password incorrect" });
 
-            User.comparePassword(password, userObj.password, function (err, isMatch) {
+            Model.comparePassword(password, userObj.password, function (err, isMatch) {
                 if (err)
                     throw err;
                 if (!isMatch)
@@ -70,7 +72,7 @@ passport.serializeUser(function (user, done) {
 });
 
 passport.deserializeUser(function (id, done) {
-    User.findById(id, function (err, userObj) {
+    Model.User.findById(id, function (err, userObj) {
         done(err, userObj);
     });
 });

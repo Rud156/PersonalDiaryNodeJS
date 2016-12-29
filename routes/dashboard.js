@@ -1,7 +1,8 @@
 var express = require('express');
 var router = express.Router();
 
-var Users = require('../Models/models');
+var crypto = require('crypto');
+var Model = require('../Models/models');
 
 /* GET home page. */
 router.get('/dashboard', ensureAuthenticated, function (req, res, next) {
@@ -20,20 +21,48 @@ function ensureAuthenticated(req, res, next) {
 router.post('/save', function (req, res, next) {
     var title = req.body.title;
     var date = req.body.date;
+    var hash = crypto.createHash('sha256').update(title + date + req.user.username).digest("hex");
     var userText = req.body.userText;
 
-    console.log("Title: " + title + ", Date: " + date + ", Text: " + userText);
-    var document = {
+    var userDoc = {
         date: date,
         title: title,
-        content: userText
+        hash: hash
     };
-    Users.findOneAndUpdate({username: req.user.username}, {$push: {documents: document}}, function(err, userObj){
+    var dataSet = new Model.Docs({
+        date: date,
+        title: title,
+        hash: hash,
+        content: userText
+    });
+    Model.Docs.findOne({ hash: hash }, function (err, docObject) {
+        if (err)
+            throw err;
+
+        if (docObject) {
+            req.flash('errorMsg', 'Page with same title and date already exists');
+            res.redirect('/users/dashboard');
+        }
+        else {
+            Model.User.findOneAndUpdate({ username: req.user.username }, { $push: { documents: userDoc } }, function (err, userObj) {
+                if (err)
+                    throw err;
+            });
+            dataSet.save(function (err, docObject) {
+                if (err)
+                    throw err;
+            });
+            req.flash('successMsg', 'Page saved');
+            res.redirect('/users/dashboard');
+        }
+    });
+});
+
+router.route('/:id').get(function (req, res) {
+    Model.Docs.findOne({hash: req.params.id}, function(err, docObj){
         if(err)
             throw err;
-        req.user = userObj;
     });
-    res.redirect('/users/dashboard');
 });
 
 module.exports = router;
