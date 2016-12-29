@@ -29,6 +29,9 @@ var handleBars = expressHandleBars.create({
     helpers: {
         capitalizeAll(variable){
             return variable.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+        },
+        unescapeContent(variable){
+            return decodeURI(variable);
         }
     },
     defaultLayout: 'layout'

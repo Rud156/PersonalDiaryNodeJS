@@ -12,13 +12,26 @@
 </style>
 <script src="/javascripts/flatpickr.js"></script>
 <script src="/javascripts/tinymce.min.js"></script>
-<nav class="w3-sidenav w3-purple w3-card-8" id="sideNav" style="width: 15%">
+<nav class="w3-sidenav w3-purple w3-card-8" id="leftPane" style="width: 15%">
     <a href="javascript:void(0)" class="w3-center w3-xlarge" onclick="displayOnClick()">Open Editor</a>
     {{#each user.documents}}
     <a href="/users/{{hash}}">{{title}}</a>
     {{/each}}
 </nav>
 
+{{#if docObj}}
+<div style="margin-left: 15%; padding-left: 30px">
+    <span class="w3-xlarge">
+        Title: <span class="w3-text-blue">{{docObj.title}}</span>
+        <br> 
+        Date: <span class="w3-text-green">{{docObj.date}}</span>
+    </span>
+    <br> 
+    <div class="w3-container w3-xlarge w3-sand" id="userContent">
+        {{unescapeContent docObj.content}}
+    </div>
+</div>
+{{else}}
 <div style="margin-left: 15%" id="rightPane">
     <div class="w3-container">
         <form id="textEditorHolder" class="w3-card-8 w3-margin-top w3-center" style="display: none" method="POST" action="/users/save">
@@ -49,6 +62,7 @@
         </div>
     </div>
 </div>
+{{/if}}
 <script>
     var editor = document.getElementById('textEditorHolder');
     var noDisplay = document.getElementById('noElements');
@@ -59,7 +73,8 @@
 
     var dateInput = document.getElementsByName('date')[0];
     var date = new Date();
-    dateInput.value = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate();
+    if(dateInput)
+        dateInput.value = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate();
 
     flatpickr('.flatpickr');
 </script>
@@ -84,4 +99,7 @@
         userText.value = document;
         console.log(document);
     }
+</script>
+<script>
+    document.getElementById('userContent').innerHTML = document.getElementById('userContent').innerText;
 </script>

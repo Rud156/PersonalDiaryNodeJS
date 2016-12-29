@@ -62,6 +62,13 @@ router.route('/:id').get(function (req, res) {
     Model.Docs.findOne({hash: req.params.id}, function(err, docObj){
         if(err)
             throw err;
+        if(docObj){
+            res.render('dashboard', {docObj: docObj});
+        }
+        else{
+            req.flash('errorMsg', 'Page does not exist');
+            res.redirect('/users/dashboard');
+        }
     });
 });
 
