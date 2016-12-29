@@ -27,10 +27,10 @@ var app = express();
 app.set('views', path.join(__dirname, 'views'));
 var handleBars = expressHandleBars.create({
     helpers: {
-        capitalizeAll(variable){
-            return variable.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+        capitalizeAll(variable) {
+            return variable.replace(/\w\S*/g, function (txt) { return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase(); });
         },
-        unescapeContent(variable){
+        unescapeContent(variable) {
             return decodeURI(variable);
         }
     },
