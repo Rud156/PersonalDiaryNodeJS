@@ -13,7 +13,6 @@ var userSchema = mongoose.Schema({
     },
     documents: [{
         title: String,
-        date: String,
         hash: String
     }]
 });
@@ -21,6 +20,7 @@ var userSchema = mongoose.Schema({
 var documentSchema = mongoose.Schema({
     date: String,
     title: String,
+    username: String,
     hash: {
         type: String,
         index: true

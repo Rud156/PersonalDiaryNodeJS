@@ -8,8 +8,9 @@ var Model = require('../Models/models');
 router.get('/dashboard', ensureAuthenticated, function (req, res, next) {
     var documents = res.locals.user.documents;
     if (documents.length !== 0) {
-        var documentReq = documents[documents.length - 1];
-        Model.Docs.findOne({ hash: documentReq.hash }, function (err, docObj) {
+        var userName = crypto.createHash('sha256').update(res.locals.user.username).digest("hex");
+
+        Model.Docs.find({ username: userName }, function (err, docObj) {
             if (err)
                 throw err;
             if (!docObj) {
@@ -18,12 +19,12 @@ router.get('/dashboard', ensureAuthenticated, function (req, res, next) {
             }
             else {
                 var decipher = crypto.createDecipher('aes-256-ctr', res.locals.user.password);
-                var dec = decipher.update(docObj.content, 'hex', 'utf8');
+                var dec = decipher.update(docObj[0].content, 'hex', 'utf8');
                 dec += decipher.final('utf8');
-                docObj.content = dec;
-                res.render('dashboard', { docObj: docObj });
+                docObj[0].content = dec;
+                res.render('dashboard', { docObj: docObj[0] });
             }
-        });
+        }).sort({"date": -1}).limit(1);
     }
     else
         res.render('dashboard', { noObject: true });
@@ -32,7 +33,9 @@ router.get('/dashboard', ensureAuthenticated, function (req, res, next) {
 router.post('/save', ensureAuthenticated, function (req, res, next) {
     var title = req.body.title;
     var date = req.body.date;
-    var hash = crypto.createHash('sha256').update(title + date + req.user.username).digest("hex");
+    var userName = crypto.createHash('sha256').update(res.locals.user.username).digest("hex");
+
+    var hash = crypto.createHash('sha256').update(title + date + res.locals.user.username).digest("hex");
     var userText = req.body.userText;
 
     var cipher = crypto.createCipher('aes-256-ctr', res.locals.user.password);
@@ -40,13 +43,13 @@ router.post('/save', ensureAuthenticated, function (req, res, next) {
     userText += cipher.final('hex');
 
     var userDoc = {
-        date: date,
         title: title,
         hash: hash
     };
     var dataSet = new Model.Docs({
         date: date,
         title: title,
+        username: userName,
         hash: hash,
         content: userText
     });
@@ -83,7 +86,7 @@ router.route('/:id').get(ensureAuthenticated, function (req, res) {
         if (err)
             throw err;
         if (docObj) {
-            
+
             var decipher = crypto.createDecipher('aes-256-ctr', res.locals.user.password);
             var dec = decipher.update(docObj.content, 'hex', 'utf8');
             dec += decipher.final('utf8');

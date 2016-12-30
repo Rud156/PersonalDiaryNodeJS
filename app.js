@@ -32,6 +32,11 @@ var handleBars = expressHandleBars.create({
         },
         unescapeContent(variable) {
             return decodeURI(variable);
+        },
+        displayDate(variable) {
+            var date = new Date(variable + "Z");
+            var splitDate = date.toDateString().split(' ');
+            return splitDate[0] + ", " + splitDate[2] + " " + splitDate[1] + " " + splitDate[3];
         }
     },
     defaultLayout: 'layout'
