@@ -18,6 +18,10 @@
             font-family: 'Dancing Script', cursive;
             font-size: 1.3em;
         }
+        .headerColor{
+            background: url('/images/background.jpg');
+            background-repeat: repeat;
+        }
         body, div, h1, h2{
             font-family: 'Lobster','Times New Roman', Times, serif, monospace !important;
             cursor: default !important;
@@ -31,9 +35,9 @@
 
 <body>
     <nav>
-        <ul class="w3-navbar w3-topnav w3-purple w3-large" id="navBar">
+        <ul class="w3-navbar w3-topnav headerColor w3-large" id="navBar">
             <li id="header">
-                <a class="w3-btn w3-purple w3-round-large" href="/">
+                <a class="w3-hover-light-blue w3-text-white" href="/">
                 {{#if user}}
                 {{capitalizeAll user.username}}'s Diary
                 {{else}}
@@ -42,11 +46,11 @@
                 </a>
             </li>
             {{#if user}}
-            <li class="w3-right"><a href="/auth/logout">Logout</a></li>
-            <li class="w3-right"><a href="/users/dashboard">Dashboard</a></li>
+            <li class="w3-right"><a class="w3-hover-light-blue w3-text-white" href="/auth/logout">Logout</a></li>
+            <li class="w3-right"><a class="w3-hover-light-blue w3-text-white" href="/users/dashboard">Dashboard</a></li>
             {{else}}
-            <li class="w3-right"><a href="/auth/register">Register</a></li>
-            <li class="w3-right"><a href="/auth/login">Login</a></li>
+            <li class="w3-right"><a class="w3-hover-light-blue w3-text-white" href="/auth/register">Register</a></li>
+            <li class="w3-right"><a class="w3-hover-light-blue w3-text-white" href="/auth/login">Login</a></li>
             {{/if}}
         </ul>
     </nav>
