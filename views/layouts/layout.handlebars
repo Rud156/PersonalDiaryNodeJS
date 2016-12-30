@@ -32,7 +32,15 @@
 <body>
     <nav>
         <ul class="w3-navbar w3-topnav w3-purple w3-large" id="navBar">
-            <li id="header"><a class="w3-btn w3-purple w3-round-large" href="/">Personal Diary</a></li>
+            <li id="header">
+                <a class="w3-btn w3-purple w3-round-large" href="/">
+                {{#if user}}
+                {{capitalizeAll user.username}}'s Diary
+                {{else}}
+                Personal Diary
+                {{/if}}
+                </a>
+            </li>
             {{#if user}}
             <li class="w3-right"><a href="/auth/logout">Logout</a></li>
             <li class="w3-right"><a href="/users/dashboard">Dashboard</a></li>
