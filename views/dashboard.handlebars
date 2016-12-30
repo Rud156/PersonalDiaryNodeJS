@@ -1,19 +1,17 @@
-<link rel="stylesheet" href="/stylesheets/flatpickr.css" />
 <style>
-    #rightPane{
+    .rightPane{
         background: url('/images/diary_1.jpg');
         background-size: cover;
         background-repeat: no-repeat;
+        margin-left: 15%;
         height: 80vh;
     }
     .transparent{
         background: transparent;
     }
 </style>
-<script src="/javascripts/flatpickr.js"></script>
-<script src="/javascripts/tinymce.min.js"></script>
 <nav class="w3-sidenav w3-purple w3-card-8" id="leftPane" style="width: 15%">
-    <a href="/users/editor" class="w3-center w3-xlarge" onclick="displayOnClick()">Open Editor</a>
+    <a href="/users/editor" class="w3-center w3-xlarge">Open Editor</a>
     {{#each user.documents}}
     <a href="/users/{{hash}}">{{title}}</a>
     {{/each}}
@@ -21,20 +19,20 @@
 
 {{#if docObj}}
 <div style="margin-left: 15%; padding-left: 30px">
-    <span class="w3-xlarge">
-        Title: <span class="w3-text-blue">{{docObj.title}}</span>
+    <div class="w3-xlarge">
+        <div class="w3-text-blue w3-center w3-xxlarge">{{docObj.title}}</div>
         <br> 
-        Date: <span class="w3-text-green">{{docObj.date}}</span>
-    </span>
+        <div class="w3-text-green w3-right w3-margin-right w3-padding-16">{{docObj.date}}</div>
+    </div>
     <br> 
-    <div class="w3-container w3-xlarge w3-sand" id="userContent">
+    <div class="w3-container w3-xlarge w3-sand" id="userContent" style="margin-top: 40px">
         {{unescapeContent docObj.content}}
     </div>
 </div>
-{{else}}
-<div style="margin-left: 15%" id="rightPane">
+{{else if editor}}
+<div class="rightPane">
     <div class="w3-container">
-        <form id="textEditorHolder" class="w3-card-8 w3-margin-top w3-center" style="display: none" method="POST" action="/users/save">
+        <form id="textEditorHolder" class="w3-card-8 w3-margin-top w3-center" method="POST" action="/users/save">
             <div class="w3-panel" style="text-align: left">
                 <div class="w3-half">
                     <label class="w3-label w3-xlarge w3-center w3-text-cyan">Title: </label>
@@ -52,19 +50,21 @@
             </button>
         </form>
     </div>
+</div>
+{{else}}
+<div class="rightPane">
     <div id="contentArea">
         <div class="w3-card-8 w3-xlarge w3-center w3-margin-top w3-padding-24" id="noElements">
             No Items To Display Now.
             <br> <br>
-            <button class="w3-btn w3-red w3-hover-green w3-round-large w3-xlarge w3-border w3-ripple" onclick="displayOnClick()">
+            <a class="w3-btn w3-red w3-hover-green w3-round-large w3-xlarge w3-border w3-ripple" href="/users/editor">
                     Click Here to Create a New Page
-            </button>
+            </a>
         </div>
     </div>
 </div>
 {{/if}}
 <script>
-    var editor = document.getElementById('textEditorHolder');
     var noDisplay = document.getElementById('noElements');
 
     var dateInput = document.getElementsByName('date')[0];
@@ -76,6 +76,7 @@
 </script>
 <script>
     var userText = document.getElementById('userText');
+    var editor = document.getElementById('textEditorHolder');
     var iFrame = null;
     tinymce.init({
         selector: '#editor',
@@ -94,8 +95,10 @@
         document = encodeURI(document);
         userText.value = document;
         console.log(document);
+        editor.submit();
     }
 </script>
 <script>
-    document.getElementById('userContent').innerHTML = document.getElementById('userContent').innerText;
+    if(document.getElementById('userContent'))
+        document.getElementById('userContent').innerHTML = document.getElementById('userContent').innerText;
 </script>
