@@ -28,6 +28,10 @@
 {{#if docObj}}
 <div style="margin-left: 15%; padding-left: 30px">
     <div class="w3-xlarge">
+        <form method="POST" id="deletePost" class="w3-container" action="/users/delete">
+            <input type="text" value="{{docObj.hash}}" name="docHash" style="display: none" />
+            <img src="/images/trash.png" class="w3-right w3-padding-8" height="50px" style="cursor: pointer" onclick="submitForm()"/>
+        </form>
         <div class="w3-text-blue w3-center w3-xxlarge">{{docObj.title}}</div>
         <div class="w3-text-green w3-right w3-margin-right w3-padding-16">{{displayDate docObj.date}}</div>
     </div>
@@ -77,7 +81,7 @@
     var dateInput = document.getElementsByName('date')[0];
     var date = new Date();
     if(dateInput)
-        dateInput.value = date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate();
+        dateInput.value = date.getFullYear() + "-" + (date.getMonth() + 1) + "-" + date.getDate();
 
     flatpickr('.flatpickr');
 </script>
@@ -103,6 +107,11 @@
         userText.value = document;
         console.log(document);
         editor.submit();
+    }
+</script>
+<script>
+    function submitForm(){
+        document.getElementById('deletePost').submit();
     }
 </script>
 <script>

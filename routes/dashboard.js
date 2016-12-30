@@ -24,7 +24,7 @@ router.get('/dashboard', ensureAuthenticated, function (req, res, next) {
                 docObj[0].content = dec;
                 res.render('dashboard', { docObj: docObj[0] });
             }
-        }).sort({"date": -1}).limit(1);
+        }).sort({ "date": -1 }).limit(1);
     }
     else
         res.render('dashboard', { noObject: true });
@@ -62,7 +62,7 @@ router.post('/save', ensureAuthenticated, function (req, res, next) {
             res.redirect('/users/dashboard');
         }
         else {
-            Model.User.findOneAndUpdate({ username: req.user.username }, { $push: { documents: userDoc } }, function (err, userObj) {
+            Model.User.findOneAndUpdate({ username: res.locals.user.username }, { $push: { documents: userDoc } }, function (err, userObj) {
                 if (err)
                     throw err;
             });
@@ -97,6 +97,33 @@ router.route('/:id').get(ensureAuthenticated, function (req, res) {
         else {
             req.flash('errorMsg', 'Page does not exist');
             res.redirect('/users/dashboard');
+        }
+    });
+});
+
+router.post('/delete', ensureAuthenticated, function (req, res, next) {
+    var docHash = req.body.docHash;
+    console.log(docHash);
+    Model.Docs.findOneAndRemove({ hash: docHash }, function (err, docObj) {
+        if (err)
+            throw err;
+        if (!docObj) {
+            req.flash('errorMsg', "Page does not exist");
+            res.redirect('/users/dashboard');
+        }
+        else {
+            Model.User.findOneAndUpdate({ username: res.locals.user.username }, { $pull: { documents: { hash: docHash } } }, function (err, userObj) {
+                if (err)
+                    throw err;
+                if (!userObj) {
+                    req.flash('errorMsg', "Page does not exist");
+                    res.redirect('/users/dashboard');
+                }
+                else {
+                    req.flash('successMsg', "Page Deleted Successfully");
+                    res.redirect('/users/dashboard');
+                }
+            });
         }
     });
 });
