@@ -28,9 +28,10 @@
 {{#if docObj}}
 <div style="margin-left: 15%; padding-left: 30px">
     <div class="w3-xlarge">
-        <form method="POST" id="deletePost" class="w3-container" action="/users/delete">
-            <input type="text" value="{{docObj.hash}}" name="docHash" style="display: none" />
-            <img src="/images/trash.png" class="w3-right w3-padding-8" height="50px" style="cursor: pointer" onclick="submitForm()"/>
+        <form method="POST" id="changePost" class="w3-container" action="/users/">
+            <input type="text" value="{{docObj.hash}}" name="docHash" class="w3-hide" />
+            <img src="/images/trash.png" class="w3-right w3-padding-8" height="50px" style="cursor: pointer;margin-left: 10px" onclick="deletePost()"/>
+            <img src="/images/edit.png" class="w3-right w3-padding-8" height="50px" style="cursor: pointer" onclick="editPost()"/>
         </form>
         <div class="w3-text-blue w3-center w3-xxlarge">{{docObj.title}}</div>
         <div class="w3-text-green w3-right w3-margin-right w3-padding-16">{{displayDate docObj.date}}</div>
@@ -44,18 +45,26 @@
 <div class="rightPane">
     <div class="w3-container">
         <form id="textEditorHolder" class="w3-card-8 w3-margin-top w3-center" method="POST" action="/users/save">
+            {{#if content}}
+            <div class="w3-panel">
+                <div class="w3-text-blue w3-center w3-xxlarge">{{title}}</div>
+                <div class="w3-text-green w3-right w3-margin-right w3-padding-16 w3-xlarge">{{displayDate date}}</div>
+                <input class="w3-hide" value="{{docHash}}" name="docHash" type="text" />
+            </div>
+            {{else}}
             <div class="w3-panel" style="text-align: left">
                 <div class="w3-half">
                     <label class="w3-label w3-xlarge w3-center w3-text-cyan">Title: </label>
-                    <input type="text" class="w3-input w3-large w3-center w3-text-amber transparent" placeholder="Title" required name="title">
+                    <input type="text" class="w3-input w3-large w3-center w3-text-amber transparent" placeholder="Title (Cannot be modified later)" required name="title">
                 </div>
                 <div class="w3-half">
                     <label class="w3-label w3-xlarge w3-center w3-text-cyan">Date: </label>
-                    <input type="text" class="flatpickr w3-input w3-large w3-center w3-text-amber transparent" placeholder="Date" required name="date">
+                    <input type="text" class="flatpickr w3-input w3-large w3-center w3-text-amber transparent" placeholder="Date (Cannot be modified later)" required name="date">
                 </div>
-                <input type="text" class="w3-hide" id="userText" name="userText"/>
             </div>
-            <textarea id="editor"></textarea>
+            {{/if}}
+            <input type="text" class="w3-hide" id="userText" name="userText"/>
+            <textarea id="editor">{{unescapeContent content}}</textarea>
             <button class="w3-btn w3-margin-top w3-margin-bottom w3-border w3-border-red w3-round-large w3-text-amber transparent" onclick="saveText()">
                 Submit Page
             </button>
@@ -86,6 +95,10 @@
     flatpickr('.flatpickr');
 </script>
 <script>
+    
+    if(document.getElementById('editor'))
+        document.getElementById('editor').innerHTML = document.getElementById('editor').value;
+
     var userText = document.getElementById('userText');
     var editor = document.getElementById('textEditorHolder');
     var iFrame = null;
@@ -110,8 +123,14 @@
     }
 </script>
 <script>
-    function submitForm(){
-        document.getElementById('deletePost').submit();
+    function deletePost(){
+        document.getElementById('changePost').action += 'delete';
+        document.getElementById('changePost').submit();
+    }
+    function editPost(){
+        document.getElementById('changePost').action += 'modify';
+        console.log(document.getElementById('changePost').action);
+        document.getElementById('changePost').submit();
     }
 </script>
 <script>
