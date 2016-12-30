@@ -103,7 +103,6 @@ router.route('/:id').get(ensureAuthenticated, function (req, res) {
 
 router.post('/delete', ensureAuthenticated, function (req, res, next) {
     var docHash = req.body.docHash;
-    console.log(docHash);
     Model.Docs.findOneAndRemove({ hash: docHash }, function (err, docObj) {
         if (err)
             throw err;
