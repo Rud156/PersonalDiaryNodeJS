@@ -22,6 +22,9 @@
             background: url('/images/background.jpg');
             background-repeat: repeat;
         }
+        .w3-closebtn{
+            cursor: pointer !important;
+        }   
         body, div, h1, h2{
             font-family: 'Lobster','Times New Roman', Times, serif, monospace !important;
             cursor: default !important;
@@ -65,17 +68,33 @@
         {{/if}}
     </div>
 </nav>
+<div class="w3-modal" id="alertModal">
+    <div class="w3-modal-content w3-animate-zoom w3-card-8 w3-red">
+        <div class="w3-closebtn w3-xxlarge w3-margin-right" onclick="closeModal()">&times;</div>
+        <br>
+        <div id="modalContent" class="w3-xlarge w3-center w3-padding-16">Some text here</div>
+    </div>
+</div>
 <div id="containerDiv">
     {{{body}}}
 </div>
 <script>
-        var container = document.getElementById('containerDiv');
-        var navBar = document.getElementsByClassName('w3-top')[0];
-        function setPadding() {
-            var height = navBar.offsetHeight;
-            container.style.paddingTop = height + "px";
-        }
-    </script>
+    var container = document.getElementById('containerDiv');
+    var navBar = document.getElementsByClassName('w3-top')[0];
+    function setPadding() {
+        var height = navBar.offsetHeight;
+        container.style.paddingTop = height + "px";
+    }
+
+    function closeModal(){
+        document.getElementById('alertModal').style.display = "none";
+    }
+
+    window.onclick = function(event){
+        if(event.target.id === "alertModal")
+            document.getElementById('alertModal').style.display = "none";
+    }
+</script>
 </body>
 
 </html>
