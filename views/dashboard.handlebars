@@ -25,7 +25,7 @@
 </nav>
 
 {{#if docObj}}
-<div style="margin-left: 15%; padding-left: 30px; padding-right: 30px" class="rightPane">
+<div style="margin-left: 15%; padding-left: 30px; padding-right: 30px; overflow: auto" class="rightPane">
     <div class="w3-xlarge">
         <form method="POST" id="changePost" class="w3-container" action="/users/">
             <input type="text" value="{{docObj.hash}}" name="docHash" class="w3-hide" />
@@ -36,7 +36,7 @@
         <div class="w3-text-indigo w3-right w3-margin-right w3-padding-16">{{displayDate docObj.date}}</div>
     </div>
     <br> 
-    <div class="w3-container w3-xlarge w3-sand" id="userContent" style="margin-top: 40px">
+    <div class="w3-container w3-xlarge w3-sand" id="userContent" style="margin: 40px 0">
         {{unescapeContent docObj.content}}
     </div>
 </div>
@@ -50,6 +50,7 @@
                 <div class="w3-text-green w3-right w3-margin-right w3-padding-16 w3-xlarge">{{displayDate date}}</div>
                 <input class="w3-hide" value="{{docHash}}" name="docHash" type="text" />
             </div>
+            <textarea class="editor">{{unescapeContent content}}</textarea>
             {{else}}
             <div class="w3-panel" style="text-align: left">
                 <div class="w3-half">
@@ -61,9 +62,9 @@
                     <input type="text" class="flatpickr w3-input w3-large w3-center w3-text-amber transparent" placeholder="Date (Cannot be modified later)" required name="date">
                 </div>
             </div>
+            <textarea class="editor"></textarea>
             {{/if}}
             <input type="text" class="w3-hide" id="userText" name="userText"/>
-            <textarea id="editor">{{unescapeContent content}}</textarea>
             <button class="w3-btn w3-margin-top w3-margin-bottom w3-border w3-border-red w3-round-large w3-text-amber transparent" onclick="saveText()">
                 Submit Page
             </button>
@@ -95,30 +96,43 @@
 </script>
 <script>
     
-    if(document.getElementById('editor'))
-        document.getElementById('editor').innerHTML = document.getElementById('editor').value;
+    if(document.getElementsByClassName('editor')[0])
+        document.getElementsByClassName('editor')[0].innerHTML = document.getElementsByClassName('editor')[0].value;
 
     var userText = document.getElementById('userText');
     var editor = document.getElementById('textEditorHolder');
     var iFrame = null;
     tinymce.init({
-        selector: '#editor',
+        selector: '.editor',
         theme: 'modern',
-        plugins: ['image textcolor spellchecker insertdatetime charmap code media table searchreplace'],
+        plugins: ['image textcolor spellchecker insertdatetime charmap code media table searchreplace link emoticons colorpicker textcolor'],
         toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | link image | bullist numlist outdent indent | emoticons',
         setup: function (editor) {
             editor.on('init', function (e) {
-            iFrame = document.getElementById('editor_ifr');
+            iFrame = document.getElementById('mce_0_ifr');
             iFrame = iFrame.contentWindow || iFrame.contentDocument;
             });
-        }
+        },
+        default_link_target: "_blank"
     });
     function saveText(event){
         var document = iFrame.document.body.innerHTML;
         document = encodeURI(document);
         userText.value = document;
-        console.log(document);
-        editor.submit();
+        if(document.getElementsByName('title')[0]){
+            if(document.getElementsByName('title')[0].value === "" && document.getElementsByName('date')[0].value == ""){
+                window.alert('Please fill the title and the date fields');
+            }
+            else if(document.getElementsByName('title')[0].value === "")
+                window.alert('Please fill the title field');
+            else if(document.getElementsByName('date')[0].value === "")
+                window.alert("Please fill the date field");
+            else
+                editor.submit();
+        }
+        else{
+            editor.submit();
+        }
     }
 </script>
 <script>
