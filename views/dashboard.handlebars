@@ -16,8 +16,13 @@
         border-left: 4px solid #4CAF50;
         word-wrap: break-word;
     }
+    .changePadding{
+        padding-left: 8px;
+        cursor: pointer !important;
+    }
 </style>
-<nav class="w3-sidenav headerColor w3-card-8" id="leftPane" style="width: 15%">
+<nav class="w3-sidenav w3-collapse w3-animate-left headerColor w3-card-8" id="leftPane" style="width: 15%">
+    <a href="javascript:void(0)" onclick="closeNav()" class="w3-closenav w3-large w3-hide-large">Close</a>
     <a href="/users/editor" class="w3-center w3-xlarge w3-hover-light-blue w3-text-white">Open Editor</a>
     {{#each user.documents}}
     <a href="/users/{{hash}}" class="w3-hover-light-blue w3-text-white">{{title}}</a>
@@ -25,8 +30,9 @@
 </nav>
 
 {{#if docObj}}
-<div style="margin-left: 15%; padding-left: 30px; padding-right: 30px; overflow: auto" class="rightPane">
+<div style="padding-left: 30px; padding-right: 30px; overflow: auto" class="rightPane w3-main">
     <div class="w3-xlarge">
+        <div class="w3-opennav w3-text-white w3-xlarge w3-hide-large changePadding w3-padding-8" onclick="openNav()">&#9776;</div>
         <form method="POST" id="changePost" class="w3-container" action="/users/">
             <input type="text" value="{{docObj.hash}}" name="docHash" class="w3-hide" />
             <img src="/images/trash.png" class="w3-right w3-padding-8" height="50px" style="cursor: pointer;margin-left: 10px" onclick="deletePost()"/>
@@ -41,8 +47,9 @@
     </div>
 </div>
 {{else if editor}}
-<div class="rightPane">
+<div class="rightPane w3-main">
     <div class="w3-container">
+        <div class="w3-opennav w3-text-white w3-xlarge w3-hide-large changePadding w3-padding-8" onclick="openNav()">&#9776;</div>
         <form id="textEditorHolder" class="w3-card-8 w3-margin-top w3-center" method="POST" action="/users/save">
             {{#if content}}
             <div class="w3-panel">
@@ -72,8 +79,9 @@
     </div>
 </div>
 {{else}}
-<div class="rightPane">
+<div class="rightPane w3-main">
     <div id="contentArea">
+        <div class="w3-opennav w3-text-white w3-xlarge w3-hide-large changePadding w3-padding-8" onclick="openNav()">&#9776;</div>
         <div class="w3-card-8 w3-xlarge w3-center w3-padding-24" id="noElements">
             No Items To Display Now.
             <br> <br>
@@ -158,4 +166,11 @@
 <script>
     if(document.getElementById('userContent'))
         document.getElementById('userContent').innerHTML = document.getElementById('userContent').innerText;
+
+    function openNav(){
+        document.getElementById('leftPane').style.display = "block";
+    }
+    function closeNav(){
+        document.getElementById('leftPane').style.display = "none";
+    }
 </script>
