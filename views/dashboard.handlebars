@@ -113,8 +113,8 @@
     tinymce.init({
         selector: '.editor',
         theme: 'modern',
-        plugins: ['image textcolor spellchecker insertdatetime charmap code media table searchreplace link emoticons colorpicker textcolor'],
-        toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | link image | bullist numlist outdent indent | emoticons',
+        plugins: ['image textcolor spellchecker insertdatetime charmap code media table searchreplace link emoticons colorpicker textcolor autoresize imagetools paste textpattern wordcount'],
+        toolbar: 'undo redo | bold italic | alignleft aligncenter alignright alignjustify | link image code | bullist numlist outdent indent | emoticons forecolor backcolor`',
         setup: function (editor) {
             editor.on('init', function (e) {
             iFrame = document.getElementById('mce_0_ifr');
