@@ -40,14 +40,14 @@ router.post('/save', ensureAuthenticated, function (req, res, next) {
         var hash = crypto.createHash('sha256').update(title + date + res.locals.user.username).digest("hex");
     }
 
-    userText  = encrypt(userText, res.locals.user.password);
+    userText = encrypt(userText, res.locals.user.password);
 
     if (!docHash) {
         var userDoc = {
             title: title,
             hash: hash
         };
-        
+
         title = encrypt(title, res.locals.user.password);
 
         var dataSet = new Model.Docs({
