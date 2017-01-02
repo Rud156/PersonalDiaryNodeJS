@@ -20,6 +20,7 @@ router.get('/dashboard', ensureAuthenticated, function (req, res, next) {
             else {
                 docObj[0].content = decrypt(docObj[0].content, res.locals.user.password);
                 docObj[0].title = decrypt(docObj[0].title, res.locals.user.password);
+                docObj[0].hash = encrypt(docObj[0].hash, res.locals.user.password);
 
                 res.render('dashboard', { docObj: docObj[0] });
             }
@@ -34,10 +35,14 @@ router.post('/save', ensureAuthenticated, function (req, res, next) {
     var date = req.body.date;
     var docHash = req.body.docHash;
     var userText = req.body.userText;
+    var hash = null;
+    var userName = null;
+    var encryptHash = null;
 
     if (!docHash) {
-        var userName = crypto.createHash('sha256').update(res.locals.user.username).digest("hex");
-        var hash = crypto.createHash('sha256').update(title + date + res.locals.user.username).digest("hex");
+        userName = crypto.createHash('sha256').update(res.locals.user.username).digest("hex");
+        hash = crypto.createHash('sha256').update(title + date + res.locals.user.username).digest("hex");
+        encryptHash = encrypt(hash, res.locals.user.password);
     }
 
     userText = encrypt(userText, res.locals.user.password);
@@ -45,7 +50,7 @@ router.post('/save', ensureAuthenticated, function (req, res, next) {
     if (!docHash) {
         var userDoc = {
             title: title,
-            hash: hash
+            hash: encryptHash
         };
 
         title = encrypt(title, res.locals.user.password);
@@ -80,6 +85,8 @@ router.post('/save', ensureAuthenticated, function (req, res, next) {
         });
     }
     else {
+        docHash = decrypt(docHash, res.locals.user.password);
+
         Model.Docs.findOne({ hash: docHash }, function (err, docObj) {
             if (err)
                 throw err;
@@ -112,13 +119,16 @@ router.get('/editor', ensureAuthenticated, function (req, res, next) {
 });
 
 router.route('/:id').get(ensureAuthenticated, function (req, res) {
-    Model.Docs.findOne({ hash: req.params.id }, function (err, docObj) {
+    var docHash = decrypt(req.params.id, res.locals.user.password);
+
+    Model.Docs.findOne({ hash: docHash }, function (err, docObj) {
         if (err)
             throw err;
         if (docObj) {
 
             docObj.content = decrypt(docObj.content, res.locals.user.password);
             docObj.title = decrypt(docObj.title, res.locals.user.password);
+            docObj.hash = encrypt(docObj.hash, res.locals.user.password);
 
             res.render('dashboard', { docObj: docObj });
         }
@@ -131,6 +141,8 @@ router.route('/:id').get(ensureAuthenticated, function (req, res) {
 
 router.post('/delete', ensureAuthenticated, function (req, res, next) {
     var docHash = req.body.docHash;
+    docHash = decrypt(docHash, res.locals.user.password);
+
     Model.Docs.findOneAndRemove({ hash: docHash }, function (err, docObj) {
         if (err)
             throw err;
@@ -139,6 +151,7 @@ router.post('/delete', ensureAuthenticated, function (req, res, next) {
             res.redirect('/users/dashboard');
         }
         else {
+            docHash = encrypt(docHash, res.locals.user.password);
             Model.User.findOneAndUpdate({ username: res.locals.user.username }, { $pull: { documents: { hash: docHash } } }, function (err, userObj) {
                 if (err)
                     throw err;
@@ -157,6 +170,8 @@ router.post('/delete', ensureAuthenticated, function (req, res, next) {
 
 router.post('/modify', ensureAuthenticated, function (req, res, next) {
     var docHash = req.body.docHash;
+    docHash = decrypt(docHash, res.locals.user.password);
+
     Model.Docs.findOne({ hash: docHash }, function (err, docObject) {
         if (err)
             throw err;
@@ -167,6 +182,7 @@ router.post('/modify', ensureAuthenticated, function (req, res, next) {
         else {
             docObject.content = decrypt(docObject.content, res.locals.user.password);
             docObject.title = decrypt(docObject.title, res.locals.user.password);
+            docHash = encrypt(docHash, res.locals.user.password);
 
             res.render('dashboard', {
                 editor: true,
