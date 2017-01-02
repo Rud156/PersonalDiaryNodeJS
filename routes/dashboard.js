@@ -18,10 +18,9 @@ router.get('/dashboard', ensureAuthenticated, function (req, res, next) {
                 res.redirect('/users/dashboard');
             }
             else {
-                var decipher = crypto.createDecipher('aes-256-ctr', res.locals.user.password);
-                var dec = decipher.update(docObj[0].content, 'hex', 'utf8');
-                dec += decipher.final('utf8');
-                docObj[0].content = dec;
+                docObj[0].content = decrypt(docObj[0].content, res.locals.user.password);
+                docObj[0].title = decrypt(docObj[0].title, res.locals.user.password);
+
                 res.render('dashboard', { docObj: docObj[0] });
             }
         }).sort({ "date": -1 }).limit(1);
@@ -41,15 +40,16 @@ router.post('/save', ensureAuthenticated, function (req, res, next) {
         var hash = crypto.createHash('sha256').update(title + date + res.locals.user.username).digest("hex");
     }
 
-    var cipher = crypto.createCipher('aes-256-ctr', res.locals.user.password);
-    userText = cipher.update(userText, 'utf8', 'hex');
-    userText += cipher.final('hex');
+    userText  = encrypt(userText, res.locals.user.password);
 
     if (!docHash) {
         var userDoc = {
             title: title,
             hash: hash
         };
+        
+        title = encrypt(title, res.locals.user.password);
+
         var dataSet = new Model.Docs({
             date: date,
             title: title,
@@ -96,7 +96,7 @@ router.post('/save', ensureAuthenticated, function (req, res, next) {
                         req.flash('errorMsg', 'Page does not exist');
                         res.redirect('/users/dashboard');
                     }
-                    else{
+                    else {
                         req.flash('successMsg', 'Page updated');
                         res.redirect('/users/dashboard');
                     }
@@ -117,10 +117,8 @@ router.route('/:id').get(ensureAuthenticated, function (req, res) {
             throw err;
         if (docObj) {
 
-            var decipher = crypto.createDecipher('aes-256-ctr', res.locals.user.password);
-            var dec = decipher.update(docObj.content, 'hex', 'utf8');
-            dec += decipher.final('utf8');
-            docObj.content = dec;
+            docObj.content = decrypt(docObj.content, res.locals.user.password);
+            docObj.title = decrypt(docObj.title, res.locals.user.password);
 
             res.render('dashboard', { docObj: docObj });
         }
@@ -167,11 +165,8 @@ router.post('/modify', ensureAuthenticated, function (req, res, next) {
             res.redirect('/users/dashboard');
         }
         else {
-
-            var decipher = crypto.createDecipher('aes-256-ctr', res.locals.user.password);
-            var dec = decipher.update(docObject.content, 'hex', 'utf8');
-            dec += decipher.final('utf8');
-            docObject.content = dec;
+            docObject.content = decrypt(docObject.content, res.locals.user.password);
+            docObject.title = decrypt(docObject.title, res.locals.user.password);
 
             res.render('dashboard', {
                 editor: true,
@@ -191,6 +186,20 @@ function ensureAuthenticated(req, res, next) {
         req.flash('errorMsg', "Not Logged In");
         res.redirect('/auth/login');
     }
+}
+
+function encrypt(dataToEncrypt, key) {
+    var cipher = crypto.createCipher('aes-256-ctr', key);
+    var resultData = cipher.update(dataToEncrypt, 'utf8', 'hex');
+    resultData += cipher.final('hex');
+    return resultData;
+}
+
+function decrypt(dataToDecrypt, key) {
+    var deCipher = crypto.createDecipher('aes-256-ctr', key);
+    var resultData = deCipher.update(dataToDecrypt, 'hex', 'utf8');
+    resultData += deCipher.final('utf8');
+    return resultData;
 }
 
 module.exports = router;
